@@ -1,0 +1,87 @@
+1. Crear la Capa de Entidades (Estructuras)
+Esta capa define qué datos vamos a mover.
+
+En el panel Explorador de Proyecto (normalmente a la derecha o izquierda), busca la carpeta Procedimientos (Procedures).
+
+Haz clic derecho sobre ella -> Nuevo conjunto de procedimientos... (New set of procedures).
+
+Ponle el nombre: SET_Entidades.
+
+Dentro, escribe este código:
+
+Fragmento de código
+stRol es una Structure
+	IDRol es un int
+	Nombre es una cadena
+FIN
+2. Crear la Capa de Acceso a Datos (CAD)
+Esta capa es la que "habla" con tus tablas Rol y Usuario que veo en tu Análisis.
+
+En el Explorador de Proyecto, busca la carpeta Clases (Classes).
+
+Haz clic derecho -> Nueva clase... (New class).
+
+Ponle el nombre: cRolCAD.
+
+En el método Constructor no pongas nada. Crea un nuevo método (clic derecho en el nombre de la clase -> Nuevo método) llamado ListarRoles y pega esto:
+
+Fragmento de código
+PROCEDURE ListarRoles() : array de stRol
+
+ltResultado es un array de stRol
+stUnRegistro es un stRol
+
+// Leemos la tabla Rol de tu análisis
+FOR EACH Rol 
+	stUnRegistro.IDRol = Rol.IDRol
+	stUnRegistro.Nombre = Rol.Nombre
+	ArrayAdd(ltResultado, stUnRegistro)
+END
+
+RESULTADO ltResultado
+3. Crear la Capa de Reglas de Negocio (CRN)
+Es el puente entre la base de datos y tu ventana de Login.
+
+Repite el proceso anterior: Clic derecho en Clases -> Nueva clase.
+
+Ponle el nombre: cRolCRN.
+
+Crea un nuevo método llamado CargarComboRoles y pega esto:
+
+Fragmento de código
+PROCEDURE CargarComboRoles() : array de stRol
+
+clAccesoDatos es una cRolCAD
+// Aquí podrías filtrar si solo quieres roles activos, etc.
+RESULTADO clAccesoDatos.ListarRoles()
+4. Conectar con la Interfaz (Tu ventana WIN_Login)
+Ahora vamos a los eventos que mostraste en tu primera imagen.
+
+Ve a tu ventana WIN_Login y haz clic derecho sobre el COMBO_Rol -> Código.
+
+Busca el evento "Inicialización de COMBO_Rol".
+
+Escribe este código exactamente:
+
+Fragmento de código
+// 1. Limpiamos el combo
+ListDeleteAll(COMBO_Rol)
+
+// 2. Llamamos a la capa de negocio
+clNegocio es una cRolCRN
+ltMisRoles es un array de stRol = clNegocio.CargarComboRoles()
+
+// 3. Llenamos el control visual
+PARA TODO objeto DE ltMisRoles
+	// Se muestra el nombre y se guarda el ID oculto
+	ListAdd(COMBO_Rol, objeto.Nombre + gStoredValue(objeto.IDRol))
+FIN
+
+// Seleccionamos el primer elemento por defecto
+ListSelectPlus(COMBO_Rol, 1)
+Resumen de dónde dar clic:
+Para las estructuras: Carpeta "Procedimientos" -> Nuevo conjunto de procedimientos.
+
+Para la lógica: Carpeta "Clases" -> Nueva clase.
+
+Para la UI: Clic derecho en el control de la ventana -> Código -> Evento Inicialización.

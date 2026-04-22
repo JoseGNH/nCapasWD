@@ -1,0 +1,14 @@
+# Build and temporary outputs
+build/
+bin/
+obj/
+*.err
+*.log
+*.tmp
+
+# Local IDE/user files
+.vscode/
+*.lock
+
+# Secrets
+config/*.local.ini
