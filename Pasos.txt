@@ -85,4 +85,3 @@ Para las estructuras: Carpeta "Procedimientos" -> Nuevo conjunto de procedimient
 Para la lógica: Carpeta "Clases" -> Nueva clase.
 
 Para la UI: Clic derecho en el control de la ventana -> Código -> Evento Inicialización.
-https://gemini.google.com/share/82d487464837
